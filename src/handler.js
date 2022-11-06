@@ -7,7 +7,7 @@ const noteExists = (id) =>{
   return notes.findIndex((note) => note.id === id);
 };
 
-const errorMessage = (action) => {
+const errorMessage = (action, h) => {
   const response = h.response({
     status: `fail`,
     message: `${action}. Data tidak ditemukan.`,
@@ -16,7 +16,7 @@ const errorMessage = (action) => {
   return response;
 };
 
-const successMessage = (action) => {
+const successMessage = (action, h) => {
   const response = h.response({
     status: `success`,
     message: `${action}`,
@@ -39,7 +39,7 @@ const addNoteHandler = (req, h) => {
   notes.push(newNote);
   const isSuccess = notes.filter((note) => note.id === id).length > 0;
   if (isSuccess) {
-    return successMessage(`Catatan berhasil dimasukkan`);
+    return successMessage(`Catatan berhasil dimasukkan`, h);
   }
 };
 
@@ -59,7 +59,7 @@ const getNoteByIdHandler = (req, h) => {
       data: {note},
     };
   }
-  return errorMessage(`Tidak dapat membuka catatan`);
+  return errorMessage(`Tidak dapat membuka catatan`, h);
 };
 
 const editNoteHandler = (req, h) =>{
@@ -69,9 +69,9 @@ const editNoteHandler = (req, h) =>{
   const index = noteExists(id);
   if (index != -1) {
     notes[index] = {...notes[index], title, tags, body, updatedAt};
-    return successMessage(`Catatan berhasil diperbarui`);
+    return successMessage(`Catatan berhasil diperbarui`, h);
   }
-  return errorMessage(`Tidak dapat memperbarui catatan`);
+  return errorMessage(`Tidak dapat memperbarui catatan`, h);
 };
 
 const deleteNoteHandler = (req, h) => {
@@ -79,9 +79,9 @@ const deleteNoteHandler = (req, h) => {
   const index = noteExists(id);
   if (index != -1) {
     notes.splice(index, 1);
-    return successMessage(`Catatan berhasil dihapus`);
+    return successMessage(`Catatan berhasil dihapus`, h);
   }
-  return errorMessage(`Tidak dapat menghapus catatan`);
+  return errorMessage(`Tidak dapat menghapus catatan`, h);
 };
 
 module.exports = {
