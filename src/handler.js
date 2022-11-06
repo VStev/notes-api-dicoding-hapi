@@ -16,7 +16,7 @@ const errorMessage = (action, h) => {
   return response;
 };
 
-const successMessage = (action, h) => {
+const successMessage = (id, action, h) => {
   const response = h.response({
     status: `success`,
     message: `${action}`,
@@ -39,7 +39,7 @@ const addNoteHandler = (req, h) => {
   notes.push(newNote);
   const isSuccess = notes.filter((note) => note.id === id).length > 0;
   if (isSuccess) {
-    return successMessage(`Catatan berhasil dimasukkan`, h);
+    return successMessage(id, `Catatan berhasil dimasukkan`, h);
   }
 };
 
@@ -69,7 +69,7 @@ const editNoteHandler = (req, h) =>{
   const index = noteExists(id);
   if (index != -1) {
     notes[index] = {...notes[index], title, tags, body, updatedAt};
-    return successMessage(`Catatan berhasil diperbarui`, h);
+    return successMessage(id, `Catatan berhasil diperbarui`, h);
   }
   return errorMessage(`Tidak dapat memperbarui catatan`, h);
 };
@@ -79,7 +79,7 @@ const deleteNoteHandler = (req, h) => {
   const index = noteExists(id);
   if (index != -1) {
     notes.splice(index, 1);
-    return successMessage(`Catatan berhasil dihapus`, h);
+    return successMessage(id, `Catatan berhasil dihapus`, h);
   }
   return errorMessage(`Tidak dapat menghapus catatan`, h);
 };
